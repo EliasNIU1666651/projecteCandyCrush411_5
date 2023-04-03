@@ -25,8 +25,10 @@ private:
     Candy m_gravityArray[NUM_COLOR_CANDIES];
     int m_gravityPointer;
     
-    void swap(Posicio from, Posicio to);
     bool check();
     bool checkEmpty(Posicio& emptyPos);
+    
+    void swap(Posicio from, Posicio to);
+    void removeCombination(Posicio from, Posicio to);
     void gravity();
 };

@@ -10,10 +10,10 @@ Candy randomCandy(int i, int j)
 }
 
 //Inicialitza el tauler amb una mida quadrada.
-void Tauler::inicialitza(int size)
+void Tauler::inicialitza(int tamany)
 {
-    m_nColumnes = size;
-    m_nFiles = size;
+    m_nColumnes = tamany;
+    m_nFiles = tamany;
     m_gravityPointer = 0;
     m_gravityArray[0] = VERMELL;
     m_gravityArray[1] = TARONJA;
@@ -21,8 +21,8 @@ void Tauler::inicialitza(int size)
     m_gravityArray[3] = BLAU;
     m_gravityArray[4] = VERD;
     m_gravityArray[5] = LILA;
-    for (int i = 0; i < size; i++)
-        for (int j = 0; j < size; j++)
+    for (int i = 0; i < tamany; i++)
+        for (int j = 0; j < tamany; j++)
             m_tauler[i][j] = randomCandy(i, j);
 }
 
@@ -45,22 +45,38 @@ void Tauler::swap(Posicio from, Posicio to)
     m_tauler[to.x][to.y] = temp;
 }
 
-//Mira si hi han combinacions, si hi han retorna true hi les elimina.
+//Mira si hi han combinacions, si hi han retorna true.
 bool Tauler::check()
 {
-    return false;
+    bool valid = false;
+
+    if (true) //theres a combination
+    {
+        valid = true;
+        removeCombination(from, to);
+        gravity();
+        check();
+    }
+
+    return valid;
+}
+
+void Tauler::removeCombination(Posicio from, Posicio to)
+{
+    for (int i = from.x; i <= to.x; i++)
+        for (int j = from.y; j <= to.y; j++)
+            m_tauler[i][j] = emptyCandy;
 }
 
 bool Tauler::checkEmpty(Posicio &emptyPos)
 {
-    Candy empty = Candy(NO_COLOR, NO_TIPUS);
     int i = 0, j = m_nColumnes-1;
     bool found = false;
     while (i < m_nFiles && !found)
     {
         while(j >= 0 && !found)
         {
-            if (m_tauler[i][j] == empty)
+            if (m_tauler[i][j] == emptyCandy)
             {
                 found = true;
                 emptyPos.x = i;
