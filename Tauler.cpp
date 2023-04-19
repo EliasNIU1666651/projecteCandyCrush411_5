@@ -119,6 +119,7 @@ void Tauler::removeAllColors(ColorCandy color)
 
 void Tauler::popCandy(Candy c, Posicio p)
 {
+    Candy emptyCandy = Candy(NO_COLOR, NO_TIPUS);
     switch(c.getTipus())
     {
         case RATLLAT_HORITZONTAL:
@@ -143,6 +144,7 @@ void Tauler::popCandy(Candy c, Posicio p)
             m_tauler[p.getFila()][p.getColumna()] = emptyCandy;
             break;
     }
+    candiesDestroyed[c.getColor()]++;
 }
 
 void Tauler::removeCombination(Posicio posArr[], int size, Candy c)
@@ -161,6 +163,7 @@ void Tauler::removeCombination(Posicio posArr[], int size, Candy c)
 
 bool Tauler::checkEmpty(Posicio &emptyPos)
 {
+    Candy emptyCandy = Candy(NO_COLOR, NO_TIPUS);
     int i = 0, j = m_nColumnes-1;
     bool found = false;
     while (i < m_nFiles && !found)

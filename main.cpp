@@ -311,7 +311,7 @@ int main()
 	if (grade == 10.0)
 		cout << "Comment :=>> Final del test sense errors" << endl;
 	cout << "Grade :=>> " << grade << endl;
-
+	cin >> grade;
 
 	return 0;
 }

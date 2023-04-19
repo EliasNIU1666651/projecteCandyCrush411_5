@@ -21,24 +21,23 @@ public:
     //GETTERS
     int getNColumnes() const { return m_nColumnes; };
     int getNFiles() const { return m_nFiles; };
-    int getNColumnesUtilitzades() const { return m_nColumnesUtilitzades; };
-    int getNFilesUtilitzades() const { return m_nFilesUtilitzades; };
-    Candy getTauler() const { return m_tauler[getNFilesUtilitzades()][getNColumnesUtilitzades()]; };
+    int getCandiesDestroyed(ColorCandy c) const { return candiesDestroyed[c]; }
+    Candy getTauler(int fila, int columna) const { return m_tauler[fila][columna]; };
 
 
     //SETTERS
-    void setNColumnesUtilitzades(int& Columna) { m_nColumnesUtilitzades = Columna; };
-    void setNFilesUtilitzades(int& Fila) { m_nFilesUtilitzades = Fila; };
-    void setTauler(Candy& Caramel) { m_tauler[getNFilesUtilitzades()][getNColumnesUtilitzades()] = Caramel; };
+    void setTauler(Candy& Caramel, int fila, int columna) { m_tauler[fila][columna] = Caramel; };
 
     void inicialitza(int size);
     bool move(Posicio from, Posicio to);
 
+
 private:
     Candy m_tauler[MAX_COLUMNES][MAX_FILES];
+    Candy m_gravityArray[NUM_COLOR_CANDIES];
+    int candiesDestroyed[NUM_COLOR_CANDIES];
     int m_nColumnes;
     int m_nFiles;
-    Candy m_gravityArray[NUM_COLOR_CANDIES];
     int m_gravityPointer;
 
     
@@ -53,11 +52,6 @@ private:
     void removeAllColors(ColorCandy color);
     void popCandy(Candy c, Posicio p);
     void gravity();
-
-
-    //PER INICIALITZAR A PARTIDA.H
-    int m_nColumnesUtilitzades;
-    int m_nFilesUtilitzades;
 };
 
 #endif

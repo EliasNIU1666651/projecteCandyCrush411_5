@@ -35,7 +35,6 @@ typedef enum
     DESCONEGUDA
 } Direccio; 
 
-const Candy emptyCandy = Candy(NO_COLOR, NO_TIPUS);
 const int MAX_FILES = 10;
 const int MAX_COLUMNES = 10;
 const int MIN_MATCHING = 3;
