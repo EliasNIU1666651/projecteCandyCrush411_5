@@ -5,8 +5,8 @@
 #include "definicions.h"
 #include <string>
 #include <iostream>
-#include<fstream>
-#include <bits.h>
+#include <fstream>
+#include <ctime>
 #include <cstdlib>
 #include <vector>
 
@@ -19,17 +19,17 @@ public:
     Tauler() : m_nColumnes(0), m_nFiles(0) {};
 
     //GETTERS
-    int getNColumnes() const { return m_nColumnes; }
-    int getNFiles() const { return m_nFiles; }
-    int getNColumnesUtilitzades() const { return m_nColumnesUtilitzades; }
-    int getNFilesUtilitzades() const { return m_nFilesUtilitzades; }
-    Candy getTauler() const { return m_tauler[getNFilesUtilitzades()][getNColumnesUtilitzades()]; }
+    int getNColumnes() const { return m_nColumnes; };
+    int getNFiles() const { return m_nFiles; };
+    int getNColumnesUtilitzades() const { return m_nColumnesUtilitzades; };
+    int getNFilesUtilitzades() const { return m_nFilesUtilitzades; };
+    Candy getTauler() const { return m_tauler[getNFilesUtilitzades()][getNColumnesUtilitzades()]; };
 
 
     //SETTERS
-    void setNColumnesUtilitzades(int& Columna) { m_nColumnesUtilitzades = Columna; }
-    void setNFilesUtilitzades(int& Fila) { m_nFilesUtilitzades = Fila; }
-    void setTauler(Candy& Caramel) { m_tauler[getNFilesUtilitzades()][getNColumnesUtilitzades()] = Caramel; }
+    void setNColumnesUtilitzades(int& Columna) { m_nColumnesUtilitzades = Columna; };
+    void setNFilesUtilitzades(int& Fila) { m_nFilesUtilitzades = Fila; };
+    void setTauler(Candy& Caramel) { m_tauler[getNFilesUtilitzades()][getNColumnesUtilitzades()] = Caramel; };
 
     void inicialitza(int size);
     bool move(Posicio from, Posicio to);
@@ -42,12 +42,18 @@ private:
     int m_gravityPointer;
 
     
-    bool check(Posicio& from, Posicio& to);
+    bool check();
     bool checkEmpty(Posicio& emptyPos);
+    bool checkForCross(Posicio pos, Posicio posArr[]);
+    bool checkForRow(Posicio pos, Posicio posArr[], int candiesInARow);
 
     void swap(Posicio from, Posicio to);
-    void removeCombination(Posicio from, Posicio to);
+    void removeCombination(Posicio posArr[], int size, Candy c);
+    void removeLinia(Posicio p, TipusCandy t);
+    void removeAllColors(ColorCandy color);
+    void popCandy(Candy c, Posicio p);
     void gravity();
+
 
     //PER INICIALITZAR A PARTIDA.H
     int m_nColumnesUtilitzades;

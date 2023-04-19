@@ -1,12 +1,6 @@
 #ifndef DEFINICIONS_H
 #define DEFINICIONS_H
 
-typedef struct
-{
-    int x;
-    int y;
-} Posicio;
-
 typedef enum
 {
     VERD,
@@ -21,8 +15,10 @@ typedef enum
 typedef enum
 {
     NORMAL,
-    RATLLAT,
-    //RATLLAT_VERTICAL,
+    RATLLAT_HORITZONTAL,
+    RATLLAT_VERTICAL,
+    ENVOLTORI,
+    BOMBA_DE_CARAMEL,
     NO_TIPUS
 } TipusCandy;
 

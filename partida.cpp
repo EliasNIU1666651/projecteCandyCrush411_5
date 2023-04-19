@@ -79,42 +79,42 @@ Candy Partida::stringToCandy(const char& caramelInput)
 		convertir.setTipus(NORMAL);
 	}
 		break;
-	//Caramels ratllats (s'ha de fer diferencia ns com)
+	//Caramels ratllats (suposem que tots son caramels horitzontals)
 	case 'r':
 	{
 		convertir.setColor(VERMELL);
-		convertir.setTipus(RATLLAT);
+		convertir.setTipus(RATLLAT_HORITZONTAL);
 	}
 	break;
 
 	case 'o':
 	{
 		convertir.setColor(TARONJA);
-		convertir.setTipus(RATLLAT);
+		convertir.setTipus(RATLLAT_HORITZONTAL);
 	}
 	break;
 	case 'y':
 	{
 		convertir.setColor(GROC);
-		convertir.setTipus(RATLLAT);
+		convertir.setTipus(RATLLAT_HORITZONTAL);
 	}
 	break;
 	case 'b':
 	{
 		convertir.setColor(BLAU);
-		convertir.setTipus(RATLLAT);
+		convertir.setTipus(RATLLAT_HORITZONTAL);
 	}
 	break;
 	case 'g':
 	{
 		convertir.setColor(GROC);
-		convertir.setTipus(RATLLAT);
+		convertir.setTipus(RATLLAT_HORITZONTAL);
 	}
 	break;
 	case 'p':
 	{
 		convertir.setColor(LILA);
-		convertir.setTipus(RATLLAT);
+		convertir.setTipus(RATLLAT_HORITZONTAL);
 	}
 	break;
 	//POSAR MES CASE AMB CARAMELS BOMBA I CARAMELS "TOCHOS"
