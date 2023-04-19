@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include "tauler.h"
+#include "posicio.h"
 
 using namespace std;
 

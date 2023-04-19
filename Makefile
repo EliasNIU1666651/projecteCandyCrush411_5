@@ -9,7 +9,7 @@ app: $(OBJECTS)
 partida.o: partida.cpp partida.h tauler.h
 	$(CXX) $(CXXFLAGS) -c partida.cpp
 
-tauler.o: tauler.cpp tauler.h definicions.h candy.h
+tauler.o: tauler.cpp tauler.h definicions.h candy.h posicio.h
 	$(CXX) $(CXXFLAGS) -c tauler.cpp
 
 candy.o: candy.cpp candy.h definicions.h

@@ -3,6 +3,7 @@
 
 void Partida::inicialitza(const string& nomFitxer)
 {
+	m_tauler.inicialitza(MAX_FILES);
 	ifstream fitxer;
 	fitxer.open(nomFitxer);
 	if (fitxer.is_open())
@@ -11,11 +12,11 @@ void Partida::inicialitza(const string& nomFitxer)
 		fitxer >> c;
 		ColorCandy colorObjectiu = stringToCandy(c).getColor();
 		setCaramelObjectiu(colorObjectiu);
-		int QuantitatObjectiu, Moviments;
-		fitxer >> QuantitatObjectiu;
-		setQuantitatObjectiu(QuantitatObjectiu);
-		fitxer >> Moviments;
-		setMoviments(Moviments);
+		int quantitatObjectiu, moviments;
+		fitxer >> quantitatObjectiu;
+		setQuantitatObjectiu(quantitatObjectiu);
+		fitxer >> moviments;
+		setMoviments(moviments);
 		Candy caramel;
 		char input;
 		int indexFiles = 0;
@@ -27,7 +28,7 @@ void Partida::inicialitza(const string& nomFitxer)
 			{
 				fitxer >> input;
 				caramel = stringToCandy(input);
-				m_tauler.setTauler(caramel, indexColumnes, indexFiles);
+				m_tauler.setTauler(caramel, indexFiles, indexColumnes);
 				indexColumnes++;
 			}
 

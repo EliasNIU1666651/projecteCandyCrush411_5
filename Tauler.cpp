@@ -221,7 +221,7 @@ bool Tauler::checkForRow(Posicio pos, Posicio posArr[], int candiesInARow)
     }
     if (!valid)
     {
-        for (int i = 0; i < candiesInARow; i++)
+        for (int i = 0; i < candiesInARow && !valid; i++)
         {
             int j = pos.getFila()-i;
             bool equal = true;
@@ -229,7 +229,7 @@ bool Tauler::checkForRow(Posicio pos, Posicio posArr[], int candiesInARow)
             {
                 if (j < 0 && j >= m_nColumnes)
                     equal = false;
-                else if (!(c == m_tauler[pos.getColumna()][j]))
+                else if (!(c == m_tauler[j][pos.getColumna()]))
                     equal = false;
                 else
                     j++;
@@ -257,7 +257,7 @@ bool Tauler::checkForCross(Posicio pos, Posicio posArr[])
         {
             if (j < 0 && j >= m_nColumnes)
                 equal = false;
-            else if (!(c == m_tauler[pos.getColumna()][j]))
+            else if (!(c == m_tauler[j][pos.getColumna()]))
                 equal = false;
             else
                 j++;
