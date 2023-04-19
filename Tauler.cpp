@@ -89,7 +89,7 @@ bool Tauler::check()
             else if(checkForRow(pos, posArr, 3)) //Check if its just 3 in a row, lowest priority
             {
                 valid = true;
-                Candy c(m_tauler[i][j].getColor(), NORMAL);
+                Candy c(NO_COLOR, NO_TIPUS);
                 removeCombination(posArr, 2, c);
                 gravity();
                 check();
@@ -149,16 +149,16 @@ void Tauler::popCandy(Candy c, Posicio p)
 
 void Tauler::removeCombination(Posicio posArr[], int size, Candy c)
 {
-    for (int s = 0; s < size/2; size++)
-        for (int i = posArr[s*2].getFila(); i <= posArr[1+s*2].getFila(); i++)
-            for (int j = posArr[s*2].getColumna(); j <= posArr[1+s*2].getColumna(); j++)
+    for (int s = 0; s < size/2; s++)
+        for (int i = 0; i <= abs(posArr[1+s*2].getFila() - posArr[s*2].getFila()); i++)
+            for (int j = 0; j <= abs(posArr[1+s*2].getColumna() - posArr[s*2].getColumna()); j++)
             {
-                Posicio pos(i, j);
+                Posicio pos(posArr[s*2].getFila()+i, posArr[s*2].getColumna()+j);
                 popCandy(m_tauler[i][j], pos);
-                m_tauler[i][j] = c;
-                if (c.getTipus() == RATLLAT_HORITZONTAL && (posArr[0].getFila() - posArr[1].getFila()) != 0)
-                    m_tauler[i][j].setTipus(RATLLAT_VERTICAL);
             }
+    m_tauler[posArr[0].getFila()][posArr[0].getColumna()] = c;
+    if (c.getTipus() == RATLLAT_HORITZONTAL && (posArr[0].getFila() - posArr[1].getFila()) != 0)
+        m_tauler[posArr[0].getFila()][posArr[0].getColumna()].setTipus(RATLLAT_VERTICAL);
 }
 
 bool Tauler::checkEmpty(Posicio &emptyPos)
@@ -199,7 +199,7 @@ bool Tauler::checkForRow(Posicio pos, Posicio posArr[], int candiesInARow)
 {
     Candy c = m_tauler[pos.getFila()][pos.getColumna()];
     bool valid = false;
-    for (int i = 0; i < candiesInARow; i++)
+    for (int i = 0; i < candiesInARow && !valid; i++)
     {
         int j = pos.getColumna()-i;
         bool equal = true;
@@ -249,7 +249,7 @@ bool Tauler::checkForCross(Posicio pos, Posicio posArr[])
 {
     bool valid = false;
     Candy c = m_tauler[pos.getFila()][pos.getColumna()];
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 3 && !valid; i++)
     {
         int j = pos.getFila()-i;
         bool equal = true;
@@ -265,8 +265,8 @@ bool Tauler::checkForCross(Posicio pos, Posicio posArr[])
 
         if (equal)
         {
-            posArr[0] = Posicio(j, pos.getColumna());
-            posArr[1] = Posicio(j-3, pos.getColumna());
+            posArr[0] = Posicio(j-3, pos.getColumna());
+            posArr[1] = Posicio(j, pos.getColumna());
             for (int k = 0; k < 3; k++)
             {
                 int j = pos.getColumna()-k;
@@ -282,8 +282,8 @@ bool Tauler::checkForCross(Posicio pos, Posicio posArr[])
                 }
                 if (equal)
                 { 
-                    posArr[2] = Posicio(j, pos.getFila());
-                    posArr[3] = Posicio(j-3, pos.getFila());
+                    posArr[2] = Posicio(j-3, pos.getFila());
+                    posArr[3] = Posicio(j, pos.getFila());
                 }
             }
         }
