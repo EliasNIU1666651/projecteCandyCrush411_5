@@ -16,8 +16,8 @@ public:
 	Candy() {}
 	Candy(ColorCandy c, TipusCandy t) : m_color(c), m_tipus(t) {}
 
-	ColorCandy getColor() const { return m_color; } 
-	TipusCandy getTipus() const { return m_tipus; } 
+	ColorCandy getColor() const { return m_color; }
+	TipusCandy getTipus() const { return m_tipus; }
 	void setColor(ColorCandy color) { m_color = color; }
 	void setTipus(TipusCandy tipus) { m_tipus = tipus; }
 	string intToString(int& canvi);

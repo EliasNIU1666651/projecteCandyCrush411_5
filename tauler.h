@@ -40,11 +40,13 @@ private:
     int m_nFiles;
     int m_gravityPointer;
 
-    
+
     bool check();
     bool checkEmpty(Posicio& emptyPos);
     bool checkForCross(Posicio pos, Posicio posArr[]);
+    bool checkForRowVertical(Posicio pos, Posicio posArr[], int candiesInARow);
     bool checkForRow(Posicio pos, Posicio posArr[], int candiesInARow);
+    bool checkForRowHoritzontal(Posicio pos, Posicio posArr[], int candiesInARow);
 
     void swap(Posicio from, Posicio to);
     void removeCombination(Posicio posArr[], int size, Candy c);

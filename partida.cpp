@@ -38,21 +38,22 @@ void Partida::inicialitza(const string& nomFitxer)
 	fitxer.close();
 }
 
-void Partida::fesMoviment(const Posicio &pos1, const Posicio &pos2)
+void Partida::fesMoviment(const Posicio& pos1, const Posicio& pos2)
 {
+
 	m_tauler.move(pos1, pos2);
 	m_nQuantitatCaramels = m_tauler.getCandiesDestroyed(m_CaramelObjectiu);
 }
 
-void Partida::escriuTauler(const string &nomFitxer)
+void Partida::escriuTauler(const string& nomFitxer)
 {
 	ofstream fitxer;
 	fitxer.open(nomFitxer);
 	if (fitxer.is_open())
 	{
-		for (int fFiles = 0; fFiles < MAX_FILES; fFiles ++)
+		for (int fFiles = 0; fFiles < MAX_FILES; fFiles++)
 		{
-			for (int fColumnes = 0; fColumnes < MAX_FILES; fColumnes ++)
+			for (int fColumnes = 0; fColumnes < MAX_FILES; fColumnes++)
 			{
 				char c = candyToString(m_tauler.getTauler(fFiles, fColumnes));
 				fitxer << c << " ";
@@ -103,8 +104,8 @@ Candy Partida::stringToCandy(const char& caramelInput)
 	case 'p':
 		convertir.setColor(LILA);
 		break;
-	//POSAR MES CASE AMB CARAMELS BOMBA I CARAMELS "TOCHOS"
-	//De moment no representem atres caramels per falta de simbols
+		//POSAR MES CASE AMB CARAMELS BOMBA I CARAMELS "TOCHOS"
+		//De moment no representem atres caramels per falta de simbols
 	default:
 		convertir.setColor(NO_COLOR);
 		convertir.setTipus(NO_TIPUS);
@@ -142,8 +143,8 @@ char Partida::candyToString(const Candy& caramelInput)
 	case VERMELL:
 		convertir = 'R';
 		break;
-	//POSAR MES CASE AMB CARAMELS BOMBA I CARAMELS "TOCHOS"
-	//De moment no representem atres caramels per falta de simbols
+		//POSAR MES CASE AMB CARAMELS BOMBA I CARAMELS "TOCHOS"
+		//De moment no representem atres caramels per falta de simbols
 	default:
 		convertir = '#';
 		break;

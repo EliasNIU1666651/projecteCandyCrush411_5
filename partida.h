@@ -18,7 +18,7 @@ public:
     void escriuTauler(const string& nomFitxer);
     Candy stringToCandy(const char& caramelInput);
     char candyToString(const Candy& caramelInput);
-    
+
     //SETTERS
     void setCaramelObjectiu(ColorCandy& CaramelObjectiu) { m_CaramelObjectiu = CaramelObjectiu; }
     void setQuantitatObjectiu(int& QuantitatObjectiu) { m_QuantitatObjectiu = QuantitatObjectiu; }
@@ -36,7 +36,7 @@ public:
     Tauler getTauler() const { return m_tauler; }
 
 private:
-	Tauler m_tauler;
+    Tauler m_tauler;
     ColorCandy m_CaramelObjectiu;
     int m_QuantitatObjectiu;
     int m_Moviments;

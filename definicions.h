@@ -33,7 +33,7 @@ typedef enum
     HORIZONTAL,
     VERTICAL,
     DESCONEGUDA
-} Direccio; 
+} Direccio;
 
 const int MAX_FILES = 10;
 const int MAX_COLUMNES = 10;
