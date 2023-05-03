@@ -13,13 +13,13 @@ B P O Y B P B Y O R
 
 RESULTAT FINAL
 -------------------------------
-G Y B B O Y O P B G
-B R O R B P B Y P R
-R G P Y G R G B B G
-G O Y Y O Y O P R G
-B P O R B P B Y B R
-R P O Y G R G B B G
-G O Y Y O Y O P G G
-B P O R B P B Y B R
-R P O y G R G B B G
-B O Y R B P B Y O R
+G P R B O Y O P B G
+B P P O B P B Y P R
+R O G R G R G B B G
+G P Y Y O Y O P R G
+B P O Y B P B Y B R
+R O O R G R G B B G
+G P Y Y O Y O P G G
+B P O Y B P B Y B R
+R y O R G R G B B G
+B P Y R B P B Y O R
