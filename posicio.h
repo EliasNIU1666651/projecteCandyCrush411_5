@@ -13,6 +13,8 @@ public:
 	int getColumna() { return m_columna; }
 	void setFila(int fila) { m_fila = fila; }
 	void setColumna(int columna) { m_columna = columna; }
+	bool operator==(Posicio& pos) {return ((pos.getColumna() == m_columna) && (pos.getFila() == m_fila)); };
+
 private:
 	int m_fila;
 	int m_columna;

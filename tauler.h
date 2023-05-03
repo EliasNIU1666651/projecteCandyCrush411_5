@@ -17,36 +17,47 @@ class Tauler
 
 public:
     Tauler() : m_nColumnes(0), m_nFiles(0) {};
+    ~Tauler();
 
     //GETTERS
     int getNColumnes() const { return m_nColumnes; };
     int getNFiles() const { return m_nFiles; };
-    int getCandiesDestroyed(ColorCandy c) const { return candiesDestroyed[c]; }
+    int getCandiesDestroyed(ColorCandy c) const { return candiesDestroyed[c]; };
+    int getMoviments() const {return m_nMoviments; };
     Candy getTauler(int fila, int columna) const { return m_tauler[fila][columna]; };
+    Candy getTauler(Posicio pos) const { return m_tauler[pos.getFila()][pos.getColumna()]; };
+    bool getAfterSwipe() const { return m_afterSwipe; }
 
 
     //SETTERS
-    void setTauler(Candy& Caramel, int fila, int columna) { m_tauler[fila][columna] = Caramel; };
+    void setTauler(Candy caramel, int fila, int columna) { m_tauler[fila][columna] = caramel; };
+    void setTauler(Candy caramel, Posicio pos) {  m_tauler[pos.getFila()][pos.getColumna()] = caramel; };
+    void setMoviments(int maxMoviments);
 
     void inicialitza(int size);
     bool move(Posicio from, Posicio to);
 
 
+
 private:
     Candy m_tauler[MAX_COLUMNES][MAX_FILES];
     Candy m_gravityArray[NUM_COLOR_CANDIES];
+    Posicio* m_movimentsFrom;
+    Posicio* m_movimentsTo;
+    int m_nMoviments;
     int candiesDestroyed[NUM_COLOR_CANDIES];
     int m_nColumnes;
     int m_nFiles;
     int m_gravityPointer;
+    bool m_afterSwipe;
 
-
+    //Funcions auxiliars internes
     bool check();
-    bool checkEmpty(Posicio& emptyPos);
+    bool checkEmpty(Posicio& emptyPos, int column);
     bool checkForCross(Posicio pos, Posicio posArr[]);
-    bool checkForRowVertical(Posicio pos, Posicio posArr[], int candiesInARow);
-    bool checkForRow(Posicio pos, Posicio posArr[], int candiesInARow);
-    bool checkForRowHoritzontal(Posicio pos, Posicio posArr[], int candiesInARow);
+    bool checkForRatllatVertical(Posicio pos, Posicio posArr[]);
+    bool checkForRow(Posicio pos, Posicio posArr[], int howMany);
+    bool checkForRatllatHoritzontal(Posicio pos, Posicio posArr[]);
 
     void swap(Posicio from, Posicio to);
     void removeCombination(Posicio posArr[], int size, Candy c);

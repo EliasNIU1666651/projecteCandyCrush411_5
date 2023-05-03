@@ -1,9 +1,13 @@
 CXXFLAGS = -g -Wall
 CXX = g++
-OBJECTS = tauler.o candy.o partida.o main.o
+OBJECTS = tauler.o candy.o partida.o
+
+secondapp: $(OBJECTS)
+	$(CXX) $(CXXFLAGS) $(OBJECTS) main2.cpp -o app
+	rm -rf *.o
 
 app: $(OBJECTS)
-	$(CXX) $(CXXFLAGS) $(OBJECTS) -o app
+	$(CXX) $(CXXFLAGS) $(OBJECTS) main.cpp -o app
 	rm -rf *.o
 
 partida.o: partida.cpp partida.h tauler.h

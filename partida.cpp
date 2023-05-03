@@ -17,6 +17,7 @@ void Partida::inicialitza(const string& nomFitxer)
 		setQuantitatObjectiu(quantitatObjectiu);
 		fitxer >> moviments;
 		setMoviments(moviments);
+		m_tauler.setMoviments(moviments);
 		Candy caramel;
 		char input;
 		int indexFiles = 0;
@@ -40,7 +41,6 @@ void Partida::inicialitza(const string& nomFitxer)
 
 void Partida::fesMoviment(const Posicio& pos1, const Posicio& pos2)
 {
-
 	m_tauler.move(pos1, pos2);
 	m_nQuantitatCaramels = m_tauler.getCandiesDestroyed(m_CaramelObjectiu);
 }
@@ -143,13 +143,14 @@ char Partida::candyToString(const Candy& caramelInput)
 	case VERMELL:
 		convertir = 'R';
 		break;
-		//POSAR MES CASE AMB CARAMELS BOMBA I CARAMELS "TOCHOS"
-		//De moment no representem atres caramels per falta de simbols
+		//POSAR MES CASE AMB CARAMELS BOMBA I CARAMELS "ENVOLTORI"
 	default:
 		convertir = '#';
 		break;
 	}
-	if (caramelInput.getTipus() == RATLLAT_HORITZONTAL || caramelInput.getTipus() == RATLLAT_VERTICAL)
+	if (caramelInput.getTipus() == RATLLAT_HORITZONTAL || caramelInput.getTipus() == RATLLAT_VERTICAL || caramelInput.getTipus() == ENVOLTORI)
 		convertir += ('a' - 'A');
+	else if (caramelInput.getTipus() == BOMBA_DE_CARAMEL)
+		convertir = '@';
 	return convertir;
 }
