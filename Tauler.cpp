@@ -12,10 +12,10 @@ Candy randomCandy(int i, int j)
 //  Deconstructor 
 Tauler::~Tauler()
 {
-    if (m_movimentsFrom != nullptr) 
-        delete[] m_movimentsFrom;
-    if (m_movimentsTo != nullptr)
-        delete[] m_movimentsTo;
+    //if (m_movimentsFrom != nullptr)
+      //  delete[] m_movimentsFrom;
+    //if (m_movimentsTo != nullptr)
+      //  delete[] m_movimentsTo;
 }
 
 //  Funcio auxiliar general, retorna true si el punt "point" esta entre vectors de l'array vector, 
