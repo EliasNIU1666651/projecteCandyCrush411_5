@@ -21,7 +21,7 @@ typedef enum
 class Joc 
 {
 public:
-    Joc() : m_temps(0), m_visible(true) {};
+    Joc() : m_temps(0), m_visible(true), m_mouseHeld(false) {};
     
     void inicialitza(const string& nomFitxerInicial);
     void actualitza(int mousePosX, int mousePosY, bool mouseStatus, double deltaTime);
@@ -30,6 +30,11 @@ private:
     bool m_visible; 
     Partida m_partida;
     EstatJoc m_estat;
+    bool m_mouseHeld;
+    Posicio m_posCandy1;
+    Posicio m_posCandy2;
+
+    void changeCandyHeld(Posicio pos, bool held);
    
 };
 

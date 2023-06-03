@@ -1,6 +1,7 @@
 #include "Joc.hpp"
 #include "InfoJoc.h"
 #include "GraphicManager.h"
+#include <iostream>
 
 
 void Joc::inicialitza(const string& nomFitxer)
@@ -18,123 +19,75 @@ void Joc::inicialitza(const string& nomFitxer)
 
 void Joc::actualitza(int mousePosX, int mousePosY, bool mouseStatus, double deltaTime) //IMPORTANT, ENTRA A LA FUNCIO CADA "MICROSEGON", PER LO QUE POSAR VARIABLES DE CONTROL 
 {
+    
     GraphicManager::getInstance()->drawSprite(IMAGE_BACKGROUND, 0, 0, false);
     GraphicManager::getInstance()->drawSprite(IMAGE_BOARD, CELL_INIT_X, CELL_INIT_Y, false);
 
-    Posicio PosX1; //primera coordenada moviment
-    Posicio PosX2; //segona coordenada moviment
-    int posX = 0; //lloc caramel
-    int posY = 0;
+    bool controlMoviment = false;
+    string msg; 
+    Posicio currentMouseCell = Posicio((mousePosY - CELL_INIT_Y) / 50, (mousePosX - CELL_INIT_X) / 50);
 
-    ColorCandy caramel;
 
-    bool controlPrimerClick = true; //click per primer cop
-    bool controlSegonClick = true;
-    bool controlMoviment = true;
+    msg = "Estat: " + to_string(m_estat) + "\nMousePos -> X:" + to_string(currentMouseCell.getColumna()) + ", Y: " + to_string(currentMouseCell.getFila());
+    GraphicManager::getInstance()->drawFont(FONT_WHITE_30, FINAL_INIT_X, 50, 1.0, msg);
 
-    while (posX < 10)
-    {
-        posY = 0;
-        while (posY < 10)
-        {
-            caramel = m_partida.getTauler().getTauler(posY, posX).getColor();
-            switch (caramel)
-            {
-
-            case VERD:
-                GraphicManager::getInstance()->drawSprite(IMAGE_PIECE_GREEN, CELL_INIT_X + (posX * CELL_W) + (CELL_W / 2), CELL_INIT_Y + (posY * CELL_H) + (CELL_H / 2), true);
-                break;
-            case LILA:
-                GraphicManager::getInstance()->drawSprite(IMAGE_PIECE_PURPLE, CELL_INIT_X + (posX * CELL_W) + (CELL_W / 2), CELL_INIT_Y + (posY * CELL_H) + (CELL_H / 2), true);
-                break;
-            case BLAU:
-                GraphicManager::getInstance()->drawSprite(IMAGE_PIECE_BLUE, CELL_INIT_X + (posX * CELL_W) + (CELL_W / 2), CELL_INIT_Y + (posY * CELL_H) + (CELL_H / 2), true);
-                break;
-            case TARONJA:
-                GraphicManager::getInstance()->drawSprite(IMAGE_PIECE_ORANGE, CELL_INIT_X + (posX * CELL_W) + (CELL_W / 2), CELL_INIT_Y + (posY * CELL_H) + (CELL_H / 2), true);
-                break;
-            case VERMELL:
-                GraphicManager::getInstance()->drawSprite(IMAGE_PIECE_RED, CELL_INIT_X + (posX * CELL_W) + (CELL_W / 2), CELL_INIT_Y + (posY * CELL_H) + (CELL_H / 2), true);
-                break;
-            case GROC:
-                GraphicManager::getInstance()->drawSprite(IMAGE_PIECE_YELLOW, CELL_INIT_X + (posX * CELL_W) + (CELL_W / 2), CELL_INIT_Y + (posY * CELL_H) + (CELL_H / 2), true);
-                break;
-            }
-
-            posY++;
-        }
-        posX++;
-    }
-
-    string msg = "X: " + to_string(mousePosX) + ", Y: " + to_string(mousePosY);
+    msg = "X: " + to_string(mousePosX) + ", Y: " + to_string(mousePosY);
     GraphicManager::getInstance()->drawFont(FONT_WHITE_30, FINAL_INIT_X, FINAL_INIT_Y, 1.0, msg);
 
 
     switch (m_estat)
     {
     case ESTAT_JOC_ESPERA:
+
+
+        m_posCandy1.erase();
+        m_posCandy2.erase();
+        m_mouseHeld = false;
         if ((mouseStatus) && (mousePosX < 550) && (mousePosY < 650) && (mousePosX > 50) && (mousePosY > 150)) //limits tauler en px, per conversió a m_tauler mirar PosX1 o PosX2
         {
             m_estat = ESTAT_JOC_INTERCANVI;
         }
+
         break;
     case ESTAT_JOC_INTERCANVI:
         
-        if (mouseStatus)
+        if (!m_mouseHeld)
         {
-            if (controlPrimerClick)
-            {
-
-                PosX1.setColumna((mousePosY / 50) - 3); //offset de 3 pq mousePos del tablero empieza en 150, cada celda de 50
-                PosX1.setFila((mousePosX / 50) - 1); //offset de 1 pq mousePos del tablero empieza en 50, cada celda de 50
-                
-                controlPrimerClick = false;
-            }
-         
-            
-
+            m_posCandy1 = currentMouseCell;
+            changeCandyHeld(m_posCandy1, true);
+            m_mouseHeld = true;
         }
-        else
+
+        m_posCandy2 = currentMouseCell;
+
+        if ((m_posCandy1.up() == m_posCandy2 ||
+            m_posCandy1.down() == m_posCandy2 ||
+            m_posCandy1.left() == m_posCandy2 ||
+            m_posCandy1.right() == m_posCandy2) &&
+            !(m_posCandy1 == m_posCandy2))
         {
-            if (!controlPrimerClick) //ja tenim les coordenades del primer caramel
+            controlMoviment = m_partida.iniciaMoviment(m_posCandy1, m_posCandy2);
+            
+        }
+
+        if (!mouseStatus)
+        {
+            m_mouseHeld = false;
+            changeCandyHeld(m_posCandy1, false);
+
+            if (!controlMoviment)
             {
-                if ((controlSegonClick)&&(PosX1.getColumna()!= (mousePosY / 50) - 3)&&(PosX1.getFila()!= (mousePosX / 50) - 1)) //mateixa cel·la
-                {
-                    PosX2.setColumna((mousePosY / 50) - 3);
-                    PosX2.setFila((mousePosX / 50) - 1);
-                    controlSegonClick = false;
-                }
-                else
-                {
-                    controlPrimerClick = true;
-                }
-
-                if (!controlSegonClick) //ja tenim segona coordenada
-                {
-                    // controlMoviment = m_partida.fesMoviment(PosX1, PosX2); a modificar amb les teves funcions, nms posar la funció que detecta si es vàlid
-                    // Al fer la funció moviment, el desplçament s'hauria de fer directament,ja que entra al case d'adalt de tot.
-                    // Sinó quan m'ho tornis a pasar, será qüestió de posar el if(deltatime>time){continuamoviment; "funció teva"} i poc més.
-                    if (controlMoviment) //ha determinar amb les teves funcions 
-                    {
-                        m_estat = ESTAT_JOC_MOVIMENTS;
-                    }
-                    else //no vàlid, ha de tornar a validar clicks
-                    {
-                        controlPrimerClick = true;
-                        controlSegonClick = true;
-                        m_estat = ESTAT_JOC_ESPERA;
-                    }
-                }
-              
-
+                m_posCandy1.erase();
+                m_posCandy2.erase();
+                m_estat = ESTAT_JOC_ESPERA;
             }
             else
             {
-                m_estat = ESTAT_JOC_ESPERA;
+                m_estat = ESTAT_JOC_MOVIMENTS;
             }
         }
-       
-      
+
+        
         break;
     case ESTAT_JOC_MOVIMENTS:
         //implementar amb les teves funcions
@@ -145,8 +98,17 @@ void Joc::actualitza(int mousePosX, int mousePosY, bool mouseStatus, double delt
         break;
     }
 
+    m_partida.getTauler().dibuixa(mousePosX, mousePosY, deltaTime);
 }
 
+void Joc::changeCandyHeld(Posicio pos, bool held)
+{
+    Tauler tempTauler = m_partida.getTauler();
+    Candy caramel = tempTauler.getTauler(pos);
+    caramel.setHeld(held);
+    tempTauler.setTauler(caramel, pos);
+    m_partida.setTauler(tempTauler);
+}
 
 
    // Afegir l'include de GraphicManager --> #include "GraphicManager.h"

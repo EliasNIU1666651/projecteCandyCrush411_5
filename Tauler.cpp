@@ -76,21 +76,23 @@ void Tauler::setMoviments(int maxMoviments)
 }
 
 
-//  Fa un moviment, retorna true si resulta en una combinacio de caramels i fals si no s'ha fet res.
-bool Tauler::move(Posicio from, Posicio to)
+bool Tauler::moveCheck(Posicio from, Posicio to)
 {
-    bool doable;
     swap(from, to);
     m_afterSwipe = true;
     m_movimentsFrom[m_nMoviments] = from;
     m_movimentsTo[m_nMoviments++] = to;
-    doable = check();
+    bool doable = playerCheck();
     if (!doable)
-    {
-        m_nMoviments--;
         swap(from, to);
-    }
     return doable;
+}
+
+//  Fa un moviment, retorna true si resulta en una combinacio de caramels i fals si no s'ha fet res.
+void Tauler::move()
+{
+    m_nMoviments--;
+    check();
 }
 
 //  Intercanvia dos caramels a partir de les seves posicions, 
@@ -177,6 +179,27 @@ bool Tauler::check()
                 gravity();
                 check();
             }
+        }
+    }
+    return valid;
+}
+
+bool Tauler::playerCheck()
+{
+    bool valid = false;
+
+    for (int i = m_nFiles - 1; i >= 0; i--)
+    {
+        for (int j = m_nColumnes - 1; j >= 0; j--)
+        {
+            Posicio pos(i, j);
+            Posicio posArr[4]; // Array de dos vectors com a maxim, indicant de on fins a on son els caramels que conformen una combinació.
+            if (checkForRow(pos, posArr, 5)             || // Comprovació bomba caramel, major prioritat
+                checkForCross(pos, posArr)              ||
+                checkForRatllatVertical(pos, posArr)    ||
+                checkForRatllatHoritzontal(pos, posArr) ||
+                checkForRow(pos, posArr, 3)                 ) 
+                valid = true;
         }
     }
     return valid;
@@ -505,4 +528,19 @@ bool Tauler::checkForCross(Posicio pos, Posicio posArr[])
         valid = equal;
     }
     return valid;
+}
+
+
+void Tauler::dibuixa(int mousePosX, int mousePosY, double deltaTime)
+{
+
+    for (int posX = 0; posX < 10; posX++)
+        for (int posY = 0; posY < 10; posY++)
+        {
+            Candy caramel = getTauler(posY, posX);
+            if (caramel.isHeld())
+                caramel.dibuixa(mousePosY, mousePosX, false);
+            else
+                caramel.dibuixa(posY, posX, true);
+        }
 }

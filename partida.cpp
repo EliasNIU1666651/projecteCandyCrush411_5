@@ -39,9 +39,15 @@ void Partida::inicialitza(const string& nomFitxer)
 	fitxer.close();
 }
 
-void Partida::fesMoviment(const Posicio& pos1, const Posicio& pos2)
+bool Partida::iniciaMoviment(const Posicio& pos1, const Posicio& pos2)
 {
-	m_tauler.move(pos1, pos2);
+	bool doable = m_tauler.moveCheck(pos1, pos2);
+	return doable;
+}
+
+void Partida::continuaMoviment()
+{
+	m_tauler.move();
 	m_nQuantitatCaramels = m_tauler.getCandiesDestroyed(m_CaramelObjectiu);
 }
 
@@ -106,6 +112,10 @@ Candy Partida::stringToCandy(const char& caramelInput)
 		break;
 		//POSAR MES CASE AMB CARAMELS BOMBA I CARAMELS "TOCHOS"
 		//De moment no representem atres caramels per falta de simbols
+	case '@':
+		convertir.setColor(NO_COLOR);
+		convertir.setTipus(BOMBA_DE_CARAMEL);
+		break;
 	default:
 		convertir.setColor(NO_COLOR);
 		convertir.setTipus(NO_TIPUS);

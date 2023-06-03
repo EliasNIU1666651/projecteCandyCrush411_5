@@ -32,7 +32,7 @@ void GraphicManager::drawSprite (IMAGE_NAME name, float posX, float posY, bool c
             posX -= m_aSprites[name].getScaleX() / 2;
             posY -= m_aSprites[name].getScaleY() / 2;
         }
-        m_aSprites[name].draw(posX, posY);
+        m_aSprites[name].draw(int(posX), int(posY));
     }
     else
     {
@@ -82,6 +82,9 @@ string GraphicManager::getImagePath(IMAGE_NAME name){
         case IMAGE_PIECE_RED_HORIZONTAL:
             path = "data/Graphics/red_horizontal.png";
             break;
+        case IMAGE_PIECE_RED_WRAPPED:
+            path = "data/Graphics/red_wrapped.png";
+            break;
         case IMAGE_PIECE_ORANGE:
             path = "data/Graphics/orange.png";
             break;
@@ -90,6 +93,9 @@ string GraphicManager::getImagePath(IMAGE_NAME name){
             break;
         case IMAGE_PIECE_ORANGE_HORIZONTAL:
             path = "data/Graphics/orange_horizontal.png";
+            break;
+        case IMAGE_PIECE_ORANGE_WRAPPED:
+            path = "data/Graphics/orange_wrapped.png";
             break;
         case IMAGE_PIECE_YELLOW:
             path = "data/Graphics/yellow.png";
@@ -100,6 +106,9 @@ string GraphicManager::getImagePath(IMAGE_NAME name){
         case IMAGE_PIECE_YELLOW_HORIZONTAL:
             path = "data/Graphics/yellow_horizontal.png";
             break;
+        case IMAGE_PIECE_YELLOW_WRAPPED:
+            path = "data/Graphics/yellow_wrapped.png";
+            break;
         case IMAGE_PIECE_BLUE:
             path = "data/Graphics/blue.png"; 
             break;
@@ -109,6 +118,9 @@ string GraphicManager::getImagePath(IMAGE_NAME name){
 		case IMAGE_PIECE_BLUE_HORIZONTAL:
 			path = "data/Graphics/blue_horizontal.png";
 			break;
+        case IMAGE_PIECE_BLUE_WRAPPED:
+            path = "data/Graphics/blue_wrapped.png";
+            break;
 		case IMAGE_PIECE_GREEN:
 			path = "data/Graphics/green.png";
 			break;
@@ -118,6 +130,9 @@ string GraphicManager::getImagePath(IMAGE_NAME name){
         case IMAGE_PIECE_GREEN_HORIZONTAL:
             path = "data/Graphics/green_horizontal.png";
             break;
+        case IMAGE_PIECE_GREEN_WRAPPED:
+            path = "data/Graphics/green_wrapped.png";
+            break;
         case IMAGE_PIECE_PURPLE:
             path = "data/Graphics/purple.png";
             break;
@@ -126,6 +141,12 @@ string GraphicManager::getImagePath(IMAGE_NAME name){
             break;
         case IMAGE_PIECE_PURPLE_HORIZONTAL:
             path = "data/Graphics/purple_horizontal.png";
+            break;
+        case IMAGE_PIECE_PURPLE_WRAPPED:
+            path = "data/Graphics/purple_wrapped.png";
+            break;
+        case IMAGE_PIECE_COLOUR_BOMB:
+            path = "data/Graphics/colour_bomb.png";
             break;
         default:
             path = "";

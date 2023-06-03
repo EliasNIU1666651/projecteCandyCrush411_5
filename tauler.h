@@ -1,6 +1,8 @@
 #ifndef TAULER_H
 #define TAULER_H
 #include "candy.h"
+#include "InfoJoc.h"
+#include "GraphicManager.h"
 #include "posicio.h"
 #include "definicions.h"
 #include <string>
@@ -16,7 +18,7 @@ class Tauler
 {
 
 public:
-    Tauler() : m_nColumnes(0), m_nFiles(0) {};
+    Tauler() : m_nColumnes(0), m_nFiles(0), m_nMoviments(0), m_gravityPointer(0), m_afterSwipe(false) {};
     ~Tauler();
 
     //GETTERS
@@ -35,7 +37,9 @@ public:
     void setMoviments(int maxMoviments);
 
     void inicialitza(int size);
-    bool move(Posicio from, Posicio to);
+    bool moveCheck(Posicio from, Posicio to);
+    void move();
+    void dibuixa(int mousePosX, int mousePosY, double deltaTime);
 
 
 
@@ -52,6 +56,8 @@ private:
     bool m_afterSwipe;
 
     //Funcions auxiliars internes
+
+    bool playerCheck();
     bool check();
     bool checkEmpty(Posicio& emptyPos, int column);
     bool checkForCross(Posicio pos, Posicio posArr[]);

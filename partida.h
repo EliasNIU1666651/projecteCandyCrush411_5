@@ -14,7 +14,8 @@ class Partida
 public:
     Partida() {}
     void inicialitza(const string& nomFitxer);
-    void fesMoviment(const Posicio& pos1, const Posicio& pos2);
+    bool iniciaMoviment(const Posicio& pos1, const Posicio& pos2);
+    void continuaMoviment();
     void escriuTauler(const string& nomFitxer);
     Candy stringToCandy(const char& caramelInput);
     char candyToString(const Candy& caramelInput);
