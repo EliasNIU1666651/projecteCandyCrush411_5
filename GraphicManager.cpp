@@ -148,6 +148,12 @@ string GraphicManager::getImagePath(IMAGE_NAME name){
         case IMAGE_PIECE_COLOUR_BOMB:
             path = "data/Graphics/colour_bomb.png";
             break;
+        case IMAGE_MOVIMENTS:
+            path = "data/Graphics/moviments.png";
+            break;
+        case IMAGE_RECTANGLE:
+            path = "data/Graphics/rectangle.png";
+            break;
         default:
             path = "";
             break;
