@@ -79,20 +79,40 @@ void Tauler::setMoviments(int maxMoviments)
 bool Tauler::moveCheck(Posicio from, Posicio to)
 {
     swap(from, to);
-    m_afterSwipe = true;
-    m_movimentsFrom[m_nMoviments] = from;
-    m_movimentsTo[m_nMoviments++] = to;
-    bool doable = playerCheck();
+    bool doable = playerCheck(from, to, true);
     if (!doable)
         swap(from, to);
+    else
+    {
+        m_afterSwipe = true;
+        m_movimentsFrom[m_nMoviments] = from;
+        m_movimentsTo[m_nMoviments++] = to;
+    }
     return doable;
 }
 
 //  Fa un moviment, retorna true si resulta en una combinacio de caramels i fals si no s'ha fet res.
-void Tauler::move()
+bool Tauler::move(Posicio from, Posicio to, MovementState state)
 {
-    m_nMoviments--;
-    check();
+    bool checking = false;
+    switch (state)
+    {
+    case CHECKING:
+        for (int i = m_nFiles - 1; i >= 0 && !checking; i--)
+            for (int j = m_nColumnes - 1; j >= 0 && !checking; j--)
+                checking = playerCheck(Posicio(i, j), Posicio(m_nFiles - 1 - i, m_nColumnes - 1 - j), false);
+        break;
+    case DELETING:
+        checking = true;
+        check();
+        break;
+    case GRAVITY:
+        checking = true;
+        gravity();
+        break;
+    }
+
+    return checking;
 }
 
 //  Intercanvia dos caramels a partir de les seves posicions, 
@@ -103,18 +123,7 @@ void Tauler::swap(Posicio from, Posicio to)
     Candy cTo = m_tauler[to.getFila()][to.getColumna()];
     m_tauler[from.getFila()][from.getColumna()] = m_tauler[to.getFila()][to.getColumna()];
     m_tauler[to.getFila()][to.getColumna()] = cFrom;
-    if (cFrom.getTipus() == BOMBA_DE_CARAMEL || cTo.getTipus() == BOMBA_DE_CARAMEL)
-    {
-        if (cFrom.getTipus() == BOMBA_DE_CARAMEL)
-            removeAllColors(cTo.getColor());
-        else if (cTo.getTipus() == BOMBA_DE_CARAMEL)
-            removeAllColors(cFrom.getColor());
-        setTauler(Candy(NO_COLOR, NO_TIPUS), to);
-        setTauler(Candy(NO_COLOR, NO_TIPUS), from);
-        check();
-        gravity();
-        check();
-    }
+    
 
 }
 
@@ -122,7 +131,28 @@ void Tauler::swap(Posicio from, Posicio to)
 bool Tauler::check()
 {
     bool valid = false;
+    if (getTauler(m_movimentsFrom[m_nMoviments-1]).getTipus() == BOMBA_DE_CARAMEL && 
+        getTauler(m_movimentsTo[m_nMoviments - 1]).getTipus() == BOMBA_DE_CARAMEL)
+    {
+        valid = true;
 
+        setTauler(Candy(NO_COLOR, NO_TIPUS), m_movimentsFrom[m_nMoviments - 1]);
+        setTauler(Candy(NO_COLOR, NO_TIPUS), m_movimentsTo[m_nMoviments - 1]);
+        for (int i = 0; i < NO_TIPUS; i++)
+            removeAllColors((ColorCandy)i);
+    }
+    else if (getTauler(m_movimentsFrom[m_nMoviments - 1]).getTipus() == BOMBA_DE_CARAMEL)
+    {
+        valid = true;
+        removeAllColors(getTauler(m_movimentsTo[m_nMoviments - 1]).getColor());
+        setTauler(Candy(NO_COLOR, NO_TIPUS), m_movimentsFrom[m_nMoviments - 1]);
+    }
+    else if (getTauler(m_movimentsTo[m_nMoviments - 1]).getTipus() == BOMBA_DE_CARAMEL)
+    {
+        valid = true;
+        removeAllColors(getTauler(m_movimentsFrom[m_nMoviments - 1]).getColor());
+        setTauler(Candy(NO_COLOR, NO_TIPUS), m_movimentsTo[m_nMoviments - 1]);
+    }
     for (int i = m_nFiles - 1; i >= 0; i--)
     {
         for (int j = m_nColumnes - 1; j >= 0; j--)
@@ -134,74 +164,67 @@ bool Tauler::check()
                 valid = true;
                 Candy c(m_tauler[i][j].getColor(), BOMBA_DE_CARAMEL);
                 removeCombination(posArr, 2, c);
-                m_afterSwipe = false;
-                check();
-                gravity();
-                check();
             }
             else if(checkForCross(pos, posArr))
             {
                 valid = true;
                 Candy c(m_tauler[i][j].getColor(), ENVOLTORI);
                 removeCombination(posArr, 4, c);
-                m_afterSwipe = false;
-                check();
-                gravity();
-                check();
             }
             else if (checkForRatllatVertical(pos, posArr))
             {
                 valid = true;
                 Candy c(m_tauler[i][j].getColor(), RATLLAT_VERTICAL);
                 removeCombination(posArr, 2, c);
-                m_afterSwipe = false;
-                check();
-                gravity();
-                check();
             }
             else if (checkForRatllatHoritzontal(pos, posArr))
             {
                 valid = true;
                 Candy c(m_tauler[i][j].getColor(), RATLLAT_HORITZONTAL);
                 removeCombination(posArr, 2, c);
-                m_afterSwipe = false;
-                check();
-                gravity();
-                check();
             }
             else if (checkForRow(pos, posArr, 3)) //    Comprova caramel normal, menor prioritat
             {
                 valid = true;
                 Candy c(NO_COLOR, NO_TIPUS);
                 removeCombination(posArr, 2, c);
-                m_afterSwipe = false;
-                check();
-                gravity();
-                check();
             }
         }
     }
+    if (valid) m_afterSwipe = false;
     return valid;
 }
 
-bool Tauler::playerCheck()
+bool Tauler::playerCheck(Posicio from, Posicio to, bool fromPlayer)
 {
     bool valid = false;
-
-    for (int i = m_nFiles - 1; i >= 0; i--)
-    {
-        for (int j = m_nColumnes - 1; j >= 0; j--)
-        {
-            Posicio pos(i, j);
-            Posicio posArr[4]; // Array de dos vectors com a maxim, indicant de on fins a on son els caramels que conformen una combinació.
-            if (checkForRow(pos, posArr, 5)             || // Comprovació bomba caramel, major prioritat
-                checkForCross(pos, posArr)              ||
-                checkForRatllatVertical(pos, posArr)    ||
-                checkForRatllatHoritzontal(pos, posArr) ||
-                checkForRow(pos, posArr, 3)                 ) 
-                valid = true;
-        }
+    
+    Posicio posArr[4]; // Array de dos vectors com a maxim, indicant de on fins a on son els caramels que conformen una combinació.
+    if ((getTauler(from).getTipus() == BOMBA_DE_CARAMEL ||
+        getTauler(to).getTipus() == BOMBA_DE_CARAMEL) && fromPlayer) {
+        valid = true;
     }
+    else if (checkForRow(from, posArr, 5) || checkForRow(to, posArr, 5)) // Comprovació bomba caramel, major prioritat
+    {
+        valid = true;
+    }
+    else if (checkForCross(from, posArr) || checkForCross(to, posArr))
+    {
+        valid = true;
+    }
+    else if (checkForRatllatVertical(from, posArr) || checkForRatllatVertical(to, posArr))
+    {
+        valid = true;
+    }
+    else if (checkForRatllatHoritzontal(from, posArr) || checkForRatllatHoritzontal(to, posArr))
+    {
+        valid = true;
+    }
+    else if (checkForRow(from, posArr, 3) || checkForRow(to, posArr, 3)) //    Comprova caramel normal, menor prioritat
+    {
+        valid = true;
+    }
+
     return valid;
 }
 
@@ -399,17 +422,30 @@ bool Tauler::checkForRatllatHoritzontal(Posicio pos, Posicio posArr[])
 bool Tauler::checkForRow(Posicio pos, Posicio posArr[], int howMany)
 {
     ColorCandy color = m_tauler[pos.getFila()][pos.getColumna()].getColor();
+    bool valid = checkForRowHoritzontal(pos, posArr, howMany);
+    if (!valid)
+        valid = checkForRowVertical(pos, posArr, howMany);
+
+
+    return valid;
+
+}
+
+
+bool Tauler::checkForRowVertical(Posicio pos, Posicio posArr[], int howMany)
+{
+    ColorCandy color = m_tauler[pos.getFila()][pos.getColumna()].getColor();
     bool valid = false;
     int i = 0;
-    while(i < howMany && !valid)
+    while (i < howMany && !valid)
     {
         int j = 0;
         valid = true;
-        while(j < howMany && valid)
+        while (j < howMany && valid)
         {
-            if (!((pos.getColumna() - i+j >= 0) && (pos.getColumna() - i+j < m_nColumnes)) || m_tauler[pos.getFila()][pos.getColumna() - i+j].getColor() == NO_COLOR)
+            if (!((pos.getFila() - i + j >= 0) && (pos.getFila() - i + j < m_nFiles)) || m_tauler[pos.getFila() - i + j][pos.getColumna()].getColor() == NO_COLOR)
                 valid = false;
-            else if (color != m_tauler[pos.getFila()][pos.getColumna() - i+j].getColor())
+            else if (color != m_tauler[pos.getFila() - i + j][pos.getColumna()].getColor())
                 valid = false;
             else j++;
         }
@@ -417,38 +453,40 @@ bool Tauler::checkForRow(Posicio pos, Posicio posArr[], int howMany)
     }
     if (valid)
     {
-        posArr[0] = Posicio(pos.getFila(), pos.getColumna() - i+1);
-        posArr[1] = Posicio(pos.getFila(), pos.getColumna() - i + howMany);
-    }
-
-
-    i = 0;
-    if (!valid)
-    {
-        while(i < howMany && !valid)
-        {
-            int j = 0;
-            valid = true;
-            while(j < howMany && valid)
-            {
-                if (!((pos.getFila() - i+j >= 0) && (pos.getFila() - i+j < m_nFiles)) || m_tauler[pos.getFila() - i+j][pos.getColumna()].getColor() == NO_COLOR)
-                    valid = false;
-                else if (color != m_tauler[pos.getFila() - i+j][pos.getColumna()].getColor())
-                    valid = false;
-                else j++;
-            }
-            i++;
-        }
-        if (valid)
-        {
-            posArr[0] = Posicio(pos.getFila() - i+1, pos.getColumna());
-            posArr[1] = Posicio(pos.getFila() - i + howMany, pos.getColumna());
-        }
+        posArr[0] = Posicio(pos.getFila() - i + 1, pos.getColumna());
+        posArr[1] = Posicio(pos.getFila() - i + howMany, pos.getColumna());
     }
 
 
     return valid;
 
+}
+
+bool Tauler::checkForRowHoritzontal(Posicio pos, Posicio posArr[], int howMany)
+{
+    ColorCandy color = m_tauler[pos.getFila()][pos.getColumna()].getColor();
+    bool valid = false;
+    int i = 0;
+    while (i < howMany && !valid)
+    {
+        int j = 0;
+        valid = true;
+        while (j < howMany && valid)
+        {
+            if (!((pos.getColumna() - i + j >= 0) && (pos.getColumna() - i + j < m_nColumnes)) || m_tauler[pos.getFila()][pos.getColumna() - i + j].getColor() == NO_COLOR)
+                valid = false;
+            else if (color != m_tauler[pos.getFila()][pos.getColumna() - i + j].getColor())
+                valid = false;
+            else j++;
+        }
+        i++;
+    }
+    if (valid)
+    {
+        posArr[0] = Posicio(pos.getFila(), pos.getColumna() - i + 1);
+        posArr[1] = Posicio(pos.getFila(), pos.getColumna() - i + howMany);
+    }
+    return valid;
 }
 
 //  Comprova combinació per caramel ratllat en direcció vertical
@@ -485,47 +523,12 @@ bool Tauler::checkForRatllatVertical(Posicio pos, Posicio posArr[])
 bool Tauler::checkForCross(Posicio pos, Posicio posArr[])
 {
     ColorCandy color = m_tauler[pos.getFila()][pos.getColumna()].getColor();
-    bool valid = false;
-    int i = 0;
-    while(i < 3 && !valid)
+    bool valid = checkForRowVertical(pos, posArr, 3);
+    if (valid)
     {
-        int j = 0;
-        bool equal = true;
-        while(j < 3 && equal)
-        {
-            if (!((pos.getColumna() - i+j >= 0) && (pos.getColumna() - i+j < m_nColumnes)) || m_tauler[pos.getFila()][pos.getColumna() - i+j].getColor() == NO_COLOR)
-                equal = false;
-            else if (color != m_tauler[pos.getFila()][pos.getColumna() - i+j].getColor())
-                equal = false;
-            else j++;
-        }
-        if (equal)
-        {
-            posArr[0] = Posicio(pos.getFila(), pos.getColumna() - i);
-            posArr[1] = Posicio(pos.getFila(), pos.getColumna() - i+2);
-            int k = 0;
-            while(k < 3 && !valid)
-            {
-                j = 0;
-                equal = true;
-                while(j < 3 && equal)
-                {
-                    if (!((pos.getFila() - k+j >= 0) && (pos.getFila() - k+j < m_nFiles)) || m_tauler[pos.getFila() - k+j][pos.getColumna()].getColor() == NO_COLOR)
-                        equal = false;
-                    else if (color != m_tauler[pos.getFila() - k+j][pos.getColumna()].getColor())
-                        equal = false;
-                    else j++;
-                }
-                k++;
-            }
-            if (equal)
-            {
-                posArr[2] = Posicio(pos.getFila() - k+1, pos.getColumna());
-                posArr[3] = Posicio(pos.getFila() - k+3, pos.getColumna());
-            }
-        }
-        i++;
-        valid = equal;
+        posArr[2] = posArr[0];
+        posArr[3] = posArr[1];
+        valid = checkForRowHoritzontal(pos, posArr, 3);
     }
     return valid;
 }

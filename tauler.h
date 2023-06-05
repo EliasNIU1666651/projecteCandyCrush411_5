@@ -38,7 +38,7 @@ public:
 
     void inicialitza(int size);
     bool moveCheck(Posicio from, Posicio to);
-    void move();
+    bool move(Posicio from, Posicio to, MovementState state);
     void dibuixa(int mousePosX, int mousePosY, double deltaTime);
 
 
@@ -57,12 +57,14 @@ private:
 
     //Funcions auxiliars internes
 
-    bool playerCheck();
+    bool playerCheck(Posicio from, Posicio to, bool fromPlayer);
     bool check();
     bool checkEmpty(Posicio& emptyPos, int column);
     bool checkForCross(Posicio pos, Posicio posArr[]);
     bool checkForRatllatVertical(Posicio pos, Posicio posArr[]);
     bool checkForRow(Posicio pos, Posicio posArr[], int howMany);
+    bool checkForRowVertical(Posicio pos, Posicio posArr[], int howMany);
+    bool checkForRowHoritzontal(Posicio pos, Posicio posArr[], int howMany);
     bool checkForRatllatHoritzontal(Posicio pos, Posicio posArr[]);
 
     void swap(Posicio from, Posicio to);

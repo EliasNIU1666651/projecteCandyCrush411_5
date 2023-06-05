@@ -21,7 +21,7 @@ typedef enum
 class Joc 
 {
 public:
-    Joc() : m_temps(0), m_visible(true), m_mouseHeld(false) {};
+    Joc() : m_temps(0.0), m_visible(true), m_mouseHeld(false) {};
     
     void inicialitza(const string& nomFitxerInicial);
     void actualitza(int mousePosX, int mousePosY, bool mouseStatus, double deltaTime);

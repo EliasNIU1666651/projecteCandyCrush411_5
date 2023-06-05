@@ -36,5 +36,4 @@ const int SCREEN_SIZE_Y = 700;
 // Temps d'espera entre cadascun dels passos d'un moviment de caramels
 const double TEMPS_PAUSA = 0.25;
 
-
 #endif

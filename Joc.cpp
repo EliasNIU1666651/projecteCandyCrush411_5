@@ -27,6 +27,7 @@ void Joc::actualitza(int mousePosX, int mousePosY, bool mouseStatus, double delt
     string msg; 
     Posicio currentMouseCell = Posicio((mousePosY - CELL_INIT_Y) / 50, (mousePosX - CELL_INIT_X) / 50);
 
+    m_temps += deltaTime;
 
     msg = "Estat: " + to_string(m_estat) + "\nMousePos -> X:" + to_string(currentMouseCell.getColumna()) + ", Y: " + to_string(currentMouseCell.getFila());
     GraphicManager::getInstance()->drawFont(FONT_WHITE_30, FINAL_INIT_X, 50, 1.0, msg);
@@ -67,37 +68,47 @@ void Joc::actualitza(int mousePosX, int mousePosY, bool mouseStatus, double delt
             !(m_posCandy1 == m_posCandy2))
         {
             controlMoviment = m_partida.iniciaMoviment(m_posCandy1, m_posCandy2);
-            
+
+            if (controlMoviment)
+            {
+                m_mouseHeld = false;
+                changeCandyHeld(m_posCandy1, false);
+                changeCandyHeld(m_posCandy2, false);
+                m_estat = ESTAT_JOC_MOVIMENTS;
+            }
         }
 
         if (!mouseStatus)
         {
             m_mouseHeld = false;
             changeCandyHeld(m_posCandy1, false);
-
-            if (!controlMoviment)
-            {
-                m_posCandy1.erase();
-                m_posCandy2.erase();
-                m_estat = ESTAT_JOC_ESPERA;
-            }
-            else
-            {
-                m_estat = ESTAT_JOC_MOVIMENTS;
-            }
+            m_posCandy1.erase();
+            m_posCandy2.erase();
+            m_estat = ESTAT_JOC_ESPERA;
+        
         }
 
         
         break;
     case ESTAT_JOC_MOVIMENTS:
-        //implementar amb les teves funcions
-        //implementar l'operator == per a buscar si s'ha assolit l'objectiu, a partir del teu codi
+
+        if (m_temps > 0.5)
+        {
+            m_partida.continuaMoviment(m_posCandy1, m_posCandy2);
+            m_temps = 0;
+        }
+        if (m_partida.getMovementState() == END_MOVEMENT)
+        {
+            m_partida.setMovementState(CHECKING);
+            m_posCandy1.erase();
+            m_posCandy2.erase();
+            m_estat = ESTAT_JOC_ESPERA;
+        }
         break;
     case ESTAT_FINAL:
         
         break;
     }
-
     m_partida.getTauler().dibuixa(mousePosX, mousePosY, deltaTime);
 }
 

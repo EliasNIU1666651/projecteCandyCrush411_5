@@ -35,11 +35,20 @@ typedef enum
     DESCONEGUDA
 } Direccio;
 
+typedef enum
+{
+    CHECKING,
+    DELETING,
+    GRAVITY,
+    END_MOVEMENT
+} MovementState;
+
+
 const int MAX_FILES = 10;
 const int MAX_COLUMNES = 10;
 const int MIN_MATCHING = 3;
 const int MIN_CARAMEL_ESPECIAL = 4;
 const int NUM_COLOR_CANDIES = 6;
-const int NUM_TYPE_CANDIES = 4;
+const int NUM_TYPE_CANDIES = 6;
 
 #endif
