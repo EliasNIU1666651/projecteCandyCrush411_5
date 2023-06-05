@@ -50,7 +50,10 @@ void Partida::continuaMoviment(const Posicio& pos1, const Posicio& pos2)
 {
 	bool checked = m_tauler.move(pos1, pos2, m_movementState);
 	if (!checked)
+	{
 		m_movementState = END_MOVEMENT;
+		m_nMovimentsFets++;
+	}	
 	else
 		m_movementState = (MovementState)((int(m_movementState + 1) % 3));
 	m_nQuantitatCaramels = m_tauler.getCandiesDestroyed(m_CaramelObjectiu);

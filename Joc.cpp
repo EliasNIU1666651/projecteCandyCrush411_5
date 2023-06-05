@@ -19,7 +19,7 @@ void Joc::inicialitza(const string& nomFitxer)
 
 void Joc::actualitza(int mousePosX, int mousePosY, bool mouseStatus, double deltaTime) //IMPORTANT, ENTRA A LA FUNCIO CADA "MICROSEGON", PER LO QUE POSAR VARIABLES DE CONTROL 
 {
-    
+
     GraphicManager::getInstance()->drawSprite(IMAGE_BACKGROUND, 0, 0, false);
     GraphicManager::getInstance()->drawSprite(IMAGE_BOARD, CELL_INIT_X, CELL_INIT_Y, false);
 
@@ -29,8 +29,17 @@ void Joc::actualitza(int mousePosX, int mousePosY, bool mouseStatus, double delt
 
     m_temps += deltaTime;
 
-    msg = "Estat: " + to_string(m_estat) + "\nMousePos -> X:" + to_string(currentMouseCell.getColumna()) + ", Y: " + to_string(currentMouseCell.getFila());
+    msg = "Moviments Fets: " + to_string(m_partida.getMovimentsFets());
+    GraphicManager::getInstance()->drawFont(FONT_WHITE_30, FINAL_INIT_X, 15, 1.0, msg);
+
+    msg = "Moviments: " + to_string(m_partida.getMoviments());
+    GraphicManager::getInstance()->drawFont(FONT_WHITE_30, 350, 15, 1.0, msg);
+
+    msg = "Caramels: " + to_string(m_partida.getQuantitatCaramels()) + "\nMousePos -> X:" + to_string(currentMouseCell.getColumna()) + ", Y: " + to_string(currentMouseCell.getFila());
     GraphicManager::getInstance()->drawFont(FONT_WHITE_30, FINAL_INIT_X, 50, 1.0, msg);
+
+    msg = "Objectiu: " + to_string(m_partida.getQuantitatObjectiu());
+    GraphicManager::getInstance()->drawFont(FONT_WHITE_30, 350, 50, 1.0, msg);
 
     msg = "X: " + to_string(mousePosX) + ", Y: " + to_string(mousePosY);
     GraphicManager::getInstance()->drawFont(FONT_WHITE_30, FINAL_INIT_X, FINAL_INIT_Y, 1.0, msg);
@@ -99,14 +108,33 @@ void Joc::actualitza(int mousePosX, int mousePosY, bool mouseStatus, double delt
         }
         if (m_partida.getMovementState() == END_MOVEMENT)
         {
+            
             m_partida.setMovementState(CHECKING);
             m_posCandy1.erase();
             m_posCandy2.erase();
             m_estat = ESTAT_JOC_ESPERA;
         }
+
+     
+
+        if ((m_partida.getQuantitatObjectiu() <= m_partida.getQuantitatCaramels()) || (m_partida.getMoviments() == m_partida.getMovimentsFets()))
+        {
+            m_estat = ESTAT_FINAL;
+ 
+        }
         break;
     case ESTAT_FINAL:
-        
+        if (m_partida.getMoviments() == m_partida.getMovimentsFets())
+        {
+            msg = "GAME OVER";
+            GraphicManager::getInstance()->drawFont(FONT_WHITE_30, 120, 350, 2.0, msg);
+        }
+        if (m_partida.getQuantitatObjectiu() <= m_partida.getQuantitatCaramels())
+        {
+            msg = "VICTORY";
+            GraphicManager::getInstance()->drawFont(FONT_WHITE_30, 150, 350, 2.0, msg);
+        }
+        return;
         break;
     }
     m_partida.getTauler().dibuixa(mousePosX, mousePosY, deltaTime);
